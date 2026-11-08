@@ -1,26 +1,438 @@
 @import "tailwindcss";
 
+/*
+ * Don's HVAC Services — brand identity from the client logo.
+ *   Brand navy   #234B6D  (logo house + "DONS")
+ *   Brand orange #FA5421  (logo flame + "HVAC SERVICES")
+ * System colours: heating = orange, cooling = ice blue, hot water = amber.
+ *
+ * Token names (midnight / limestone / copper) are kept from the first
+ * iteration so every component inherits the palette:
+ *   midnight-*  → navy scale        limestone-* → cool cloud neutrals
+ *   copper-*    → flame orange      ice-* / ember-* → system accents
+ *
+ * Text/background contrast pairs are verified (WCAG AA) by
+ * `npm run audit:contrast` (scripts/check-contrast.ts).
+ */
+@theme {
+  --color-midnight-950: #061325;
+  --color-midnight-900: #0a1e35;
+  --color-midnight-800: #11304f;
+  --color-midnight-700: #234b6d;
+  --color-midnight-500: #3f74a3;
+  --color-midnight-300: #a8c6e3;
+  --color-midnight-100: #e1edf9;
+
+  --color-limestone-50: #fbfdff;
+  --color-limestone-100: #f1f6fb;
+  --color-limestone-200: #e0eaf4;
+  --color-limestone-300: #c8d7e7;
+  --color-limestone-400: #9cb2c9;
+
+  --color-ink: #0c1b2b;
+  --color-ink-muted: #3b4e62;
+  --color-ink-soft: #4f6377;
+
+  --color-copper-800: #8c2905;
+  --color-copper-700: #b5360a;
+  --color-copper-600: #dd4511;
+  --color-copper-500: #fa5421;
+  --color-copper-400: #ff7a45;
+  --color-copper-300: #ff9e74;
+  --color-copper-100: #ffe5d9;
+
+  --color-ice-700: #04679c;
+  --color-ice-500: #19b4f2;
+  --color-ice-300: #7fd5ff;
+  --color-ice-100: #dcf3ff;
+
+  --color-ember-700: #8a5600;
+  --color-ember-500: #ffb21f;
+  --color-ember-300: #ffd27d;
+  --color-ember-100: #fff1d1;
+
+  --color-danger-700: #a3201a;
+  --color-success-700: #1b6b3c;
+
+  --font-display: var(--font-barlow-condensed), "Barlow Condensed", "Arial Narrow", "Roboto Condensed",
+    "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-instrument-sans), "Instrument Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+
+  --text-display-xl: clamp(2.6rem, 1.6rem + 4.6vw, 5.4rem);
+  --text-display-xl--line-height: 0.95;
+  --text-display-lg: clamp(2.1rem, 1.5rem + 2.8vw, 3.75rem);
+  --text-display-lg--line-height: 1;
+  --text-display-md: clamp(1.6rem, 1.3rem + 1.3vw, 2.4rem);
+  --text-display-md--line-height: 1.05;
+
+  --shadow-glow-orange: 0 10px 30px -10px rgb(250 84 33 / 0.65);
+  --shadow-glow-ice: 0 10px 30px -12px rgb(25 180 242 / 0.6);
+  --shadow-panel: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 20px 50px -28px rgb(10 30 53 / 0.45);
+
+  --spacing-gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+  --container-page: 78rem;
+  --container-prose: 40rem;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --mobile-bar-height: 0px;
+  --heat: var(--color-copper-500);
+  --cool: var(--color-ice-500);
+  --water: var(--color-ember-500);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (max-width: 767.98px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --mobile-bar-height: calc(4rem + env(safe-area-inset-bottom));
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background: var(--color-limestone-100);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    /* Keep the fixed mobile call/request bar from covering content. */
+    padding-bottom: var(--mobile-bar-height);
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  /* Visible, consistent focus for every interactive element. */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid var(--color-copper-500);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .on-dark :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline-color: var(--color-ice-300);
+  }
+
+  ::selection {
+    background: var(--color-copper-100);
+    color: var(--color-ink);
+  }
+
+  /*
+   * Dark bands get the aurora treatment automatically: deep navy with
+   * soft orange and ice-blue light. Purely decorative (background only).
+   */
+  section.on-dark,
+  footer.on-dark,
+  div.on-dark.aurora {
+    background-color: var(--color-midnight-900);
+    background-image:
+      radial-gradient(60rem 30rem at 85% -10%, rgb(250 84 33 / 0.22), transparent 60%),
+      radial-gradient(50rem 28rem at -10% 110%, rgb(25 180 242 / 0.2), transparent 60%),
+      radial-gradient(30rem 20rem at 50% 50%, rgb(35 75 109 / 0.55), transparent 70%),
+      linear-gradient(180deg, var(--color-midnight-900), var(--color-midnight-950));
+  }
+}
+
+/*
+ * Line illustrations. On light surfaces they use brand navy with orange and
+ * ice accents; inside `.on-dark` they glow in light blue.
+ */
+.drawing {
+  --line: var(--color-midnight-700);
+  --line-soft: color-mix(in oklab, var(--color-midnight-700) 50%, transparent);
+  --hatch: color-mix(in oklab, var(--color-midnight-700) 18%, transparent);
+  --accent: var(--color-copper-500);
+  --accent-2: var(--color-ice-500);
+}
+.on-dark .drawing,
+.drawing.on-dark {
+  --line: var(--color-ice-300);
+  --line-soft: color-mix(in oklab, var(--color-ice-300) 50%, transparent);
+  --hatch: color-mix(in oklab, var(--color-ice-300) 18%, transparent);
+}
+.drawing .ln {
+  stroke: var(--line);
+  stroke-width: 1.35;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+.drawing .ln-soft {
+  stroke: var(--line-soft);
+  stroke-width: 1;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+.drawing .ln-accent {
+  stroke: var(--accent);
+  stroke-width: 2;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: max(1rem, var(--spacing-gutter));
+}
+
+@utility prose-copy {
+  max-width: var(--container-prose);
+  & p + p {
+    margin-top: 1em;
+  }
+  & a {
+    color: var(--color-copper-700);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Fine tech grid used behind panels and drawings. */
+@utility blueprint-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-midnight-300) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-midnight-300) 22%, transparent) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Glass panel for light surfaces. */
+@utility glass {
+  background: color-mix(in oklab, white 72%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-midnight-300) 45%, transparent);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(14px) saturate(1.3);
+}
+
+/* Glass panel for dark surfaces. */
+@utility glass-dark {
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.09), rgb(255 255 255 / 0.03));
+  border: 1px solid rgb(168 198 227 / 0.22);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.08) inset, 0 30px 60px -30px rgb(0 0 0 / 0.6);
+  backdrop-filter: blur(16px) saturate(1.4);
+}
+
+/* Brand gradient text (decorative emphasis inside headings). */
+@utility text-gradient-heat {
+  background: linear-gradient(90deg, var(--color-copper-300), var(--color-copper-500) 45%, var(--color-ember-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility text-gradient-cool {
+  background: linear-gradient(90deg, var(--color-ice-300), var(--color-ice-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Thin heat→cool gradient rule echoing the logo's swoosh. */
+@utility swoosh {
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-copper-500), var(--color-ember-500) 45%, var(--color-ice-500));
+}
+
+/* Light section with subtle colour wash. */
+@utility bg-wash {
+  background-color: var(--color-limestone-100);
+  background-image:
+    radial-gradient(40rem 22rem at 100% 0%, rgb(25 180 242 / 0.08), transparent 60%),
+    radial-gradient(36rem 20rem at 0% 100%, rgb(250 84 33 / 0.07), transparent 60%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media print {
+  body {
+    padding-bottom: 0;
+  }
+  [data-print-hidden] {
+    display: none !important;
+  }
+}
+
+/* ── System tones + illustration panels ─────────────────────────────── */
+[data-tone="heat"] {
+  --tone: var(--color-copper-500);
+  --tone-light: var(--color-copper-300);
+  --tone-glow: rgb(250 84 33 / 0.38);
+}
+[data-tone="cool"] {
+  --tone: var(--color-ice-500);
+  --tone-light: var(--color-ice-300);
+  --tone-glow: rgb(25 180 242 / 0.38);
+}
+[data-tone="water"] {
+  --tone: var(--color-ember-500);
+  --tone-light: var(--color-ember-300);
+  --tone-glow: rgb(255 178 31 / 0.34);
+}
+[data-tone="dual"] {
+  --tone: var(--color-ice-500);
+  --tone-light: var(--color-ice-300);
+  --tone-glow: rgb(25 180 242 / 0.3);
+}
+
+.illus-panel {
+  border-radius: var(--radius-lg);
+  border: 1px solid rgb(168 198 227 / 0.22);
+  background:
+    radial-gradient(22rem 14rem at 88% 0%, var(--tone-glow, rgb(25 180 242 / 0.3)), transparent 70%),
+    radial-gradient(18rem 12rem at 0% 100%, rgb(35 75 109 / 0.7), transparent 70%),
+    linear-gradient(160deg, #0e2a49, #081a2f);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.07) inset, 0 24px 50px -30px rgb(6 19 37 / 0.8);
+}
+.illus-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgb(127 213 255 / 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(127 213 255 / 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+[data-tone="dual"].illus-panel {
+  background:
+    radial-gradient(20rem 13rem at 90% 0%, rgb(250 84 33 / 0.3), transparent 70%),
+    radial-gradient(20rem 13rem at 0% 100%, rgb(25 180 242 / 0.3), transparent 70%),
+    linear-gradient(160deg, #0e2a49, #081a2f);
+}
+.illus-panel .drawing,
+.illus-panel.drawing {
+  --line: var(--tone-light, var(--color-ice-300));
+  --line-soft: color-mix(in oklab, var(--tone-light, var(--color-ice-300)) 45%, transparent);
+  --hatch: color-mix(in oklab, var(--tone-light, var(--color-ice-300)) 18%, transparent);
+  position: relative;
+  filter: drop-shadow(0 0 6px var(--tone-glow, rgb(25 180 242 / 0.3)));
+}
+
+/* ── Inner-page heroes: dark aurora band ─────────────────────────────
+ * Applied with class="page-hero on-dark". Remaps the light-theme text
+ * utilities used inside hero markup so every inner page shares the home
+ * hero's look without duplicating markup. */
+.page-hero {
+  position: relative;
+  isolation: isolate;
+  color: #fff;
+  border-bottom: 0 !important;
+  background-color: var(--color-midnight-900);
+  background-image:
+    radial-gradient(50rem 26rem at 90% -20%, rgb(250 84 33 / 0.26), transparent 60%),
+    radial-gradient(44rem 24rem at -10% 120%, rgb(25 180 242 / 0.24), transparent 60%),
+    linear-gradient(180deg, var(--color-midnight-900), var(--color-midnight-950)) !important;
+}
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgb(127 213 255 / 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(127 213 255 / 0.1) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse at 80% 0%, black, transparent 70%);
+}
+.page-hero h1 {
+  color: #fff;
+}
+.page-hero .text-midnight-900:not(a, a *),
+.page-hero .text-ink:not(a, a *) {
+  color: #fff;
+}
+.page-hero .text-ink-muted,
+.page-hero .text-ink-soft {
+  color: var(--color-midnight-100);
+}
+.page-hero .text-copper-700 {
+  color: var(--color-copper-300);
+}
+.page-hero .eyebrow.text-copper-700 {
+  color: var(--color-ice-300);
+}
+.page-hero nav[aria-label="Breadcrumb"],
+.page-hero nav[aria-label="Breadcrumb"] a {
+  color: var(--color-midnight-100);
+}
+.page-hero .prose-copy a {
+  color: var(--color-copper-300);
+}
+.page-hero .drawing {
+  --line: var(--color-ice-300);
+  --line-soft: rgb(127 213 255 / 0.5);
+  filter: drop-shadow(0 0 6px rgb(25 180 242 / 0.35));
+}
+.page-hero dt {
+  color: var(--color-ice-300) !important;
+}
+.page-hero dd,
+.page-hero dd * {
+  color: #fff;
+}
+
+/* Secondary buttons adapt automatically on any dark band. */
+.on-dark .btn-secondary,
+.page-hero .btn-secondary {
+  background: rgb(255 255 255 / 0.1);
+  color: #fff;
+  border-color: rgb(255 255 255 / 0.3);
+}
+.on-dark .btn-secondary:hover,
+.page-hero .btn-secondary:hover {
+  background: rgb(255 255 255 / 0.2);
+  border-color: rgb(255 255 255 / 0.55);
 }

@@ -1,0 +1,148 @@
+/*
+ * Cutaway drawing — glowing, colour-coded diagram on a dark glass panel.
+ * Every system is visible and colour-coded by default (heating orange,
+ * cooling ice blue, hot water amber). Selecting a system dims the others and
+ * brightens the chosen one. Flow motion runs only when the visitor has not
+ * asked for reduced motion.
+ */
+.frame {
+  position: relative;
+  aspect-ratio: 800 / 620;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(28rem 18rem at 80% 10%, rgb(250 84 33 / 0.16), transparent 70%),
+    radial-gradient(26rem 18rem at 10% 95%, rgb(25 180 242 / 0.16), transparent 70%),
+    linear-gradient(160deg, #0d2744, #081a2f);
+  border: 1px solid rgb(168 198 227 / 0.25);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.08) inset,
+    0 40px 80px -40px rgb(0 0 0 / 0.7),
+    0 0 0 1px rgb(25 180 242 / 0.06);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Structure lines glow light blue on the dark panel. */
+  --line: #9ccff2;
+  --line-soft: rgb(156 207 242 / 0.45);
+}
+
+/* System colour per group (shared ducts follow the active system). */
+.svg [data-system~="heating"] { --sys: var(--heat); --sys-glow: rgb(250 84 33 / 0.75); }
+.svg [data-system~="cooling"] { --sys: var(--cool); --sys-glow: rgb(25 180 242 / 0.75); }
+.svg [data-system~="hot-water"] { --sys: var(--water); --sys-glow: rgb(255 178 31 / 0.75); }
+.frame[data-active="cooling"] .svg [data-system~="cooling"] { --sys: var(--cool); --sys-glow: rgb(25 180 242 / 0.75); }
+.frame[data-active="heating"] .svg [data-system~="heating"] { --sys: var(--heat); --sys-glow: rgb(250 84 33 / 0.75); }
+
+.paper { fill: transparent; }
+.room { fill: rgb(255 255 255 / 0.035); }
+.basement { fill: rgb(25 180 242 / 0.06); }
+.eq {
+  fill: color-mix(in oklab, var(--sys, #9ccff2) 14%, #0b2140);
+  stroke: var(--sys, var(--line)) !important;
+  transition: fill 0.25s ease, filter 0.25s ease;
+}
+.cut { fill: var(--sys, #9ccff2); }
+.hatchLine { stroke: rgb(156 207 242 / 0.22); stroke-width: 1; }
+
+.flow {
+  fill: none;
+  stroke: var(--sys, var(--heat));
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-dasharray: 3 8;
+  filter: drop-shadow(0 0 3px var(--sys-glow, rgb(250 84 33 / 0.7)));
+}
+.flowReturn { stroke-opacity: 0.6; }
+
+.tag {
+  fill: #0b2140;
+  stroke: var(--sys, #9ccff2);
+  stroke-width: 1.5;
+}
+.tagText {
+  fill: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+}
+.note {
+  fill: rgb(200 225 245 / 0.75);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+.leader { stroke: rgb(200 225 245 / 0.6); stroke-width: 0.9; fill: none; }
+
+.frame [data-system] { transition: opacity 0.25s ease; }
+
+.frame[data-active="heating"] [data-system]:not([data-system~="heating"]),
+.frame[data-active="cooling"] [data-system]:not([data-system~="cooling"]),
+.frame[data-active="hot-water"] [data-system]:not([data-system~="hot-water"]) {
+  opacity: 0.18;
+}
+.frame[data-active="heating"] [data-structure],
+.frame[data-active="cooling"] [data-structure],
+.frame[data-active="hot-water"] [data-structure] {
+  opacity: 0.5;
+}
+
+/* Active system: brighter strokes, filled tags, glow. */
+.frame[data-active="heating"] [data-system~="heating"] :global(.ln),
+.frame[data-active="cooling"] [data-system~="cooling"] :global(.ln),
+.frame[data-active="hot-water"] [data-system~="hot-water"] :global(.ln) {
+  stroke: var(--sys);
+  stroke-width: 2;
+}
+.frame[data-active="heating"] [data-system~="heating"] .eq,
+.frame[data-active="cooling"] [data-system~="cooling"] .eq,
+.frame[data-active="hot-water"] [data-system~="hot-water"] .eq {
+  fill: color-mix(in oklab, var(--sys) 30%, #0b2140);
+  filter: drop-shadow(0 0 6px var(--sys-glow));
+}
+.frame[data-active="heating"] [data-system~="heating"] .tag,
+.frame[data-active="cooling"] [data-system~="cooling"] .tag,
+.frame[data-active="hot-water"] [data-system~="hot-water"] .tag {
+  fill: var(--sys);
+  stroke: var(--sys);
+  filter: drop-shadow(0 0 6px var(--sys-glow));
+}
+.frame[data-active="heating"] [data-system~="heating"] .tagText,
+.frame[data-active="cooling"] [data-system~="cooling"] .tagText,
+.frame[data-active="hot-water"] [data-system~="hot-water"] .tagText {
+  fill: #061325;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Motion only on the selected system (no autoplay). */
+  .frame[data-active="heating"] [data-system~="heating"] .flow,
+  .frame[data-active="cooling"] [data-system~="cooling"] .flow,
+  .frame[data-active="hot-water"] [data-system~="hot-water"] .flow {
+    animation: flow 1s linear infinite;
+  }
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -22;
+  }
+}
+
+/* The 3D layer sits exactly over the drawing so nothing shifts. */
+.layer {
+  position: absolute;
+  inset: 0;
+}
+.canvasHost {
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+  cursor: grab;
+}
+.canvasHost:active { cursor: grabbing; }
+.canvasHost :global(canvas) { display: block; width: 100%; height: 100%; }
