@@ -15,7 +15,9 @@
     "test:e2e": "playwright test",
     "audit:seo": "tsx scripts/seo-audit.ts",
     "audit:contrast": "tsx scripts/check-contrast.ts",
-    "preview": "next build && next start -p 3000"
+    "preview": "next build && next start -p 3000",
+    "build:static": "tsx scripts/build-static.ts",
+    "preview:static": "php -S 127.0.0.1:4000 -t dist-static static-host/preview-router.php"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

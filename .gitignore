@@ -48,3 +48,7 @@ next-env.d.ts
 /.next-*/
 /audit-report/
 /.data-dev.log
+
+# static hosting build output + local settings
+/dist-static/
+.env.static

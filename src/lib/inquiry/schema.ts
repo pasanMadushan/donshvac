@@ -354,8 +354,11 @@ export type InquiryState =
       firstName: string;
       channel: ContactChannel;
       demo: boolean;
-      /** "resend" = provider accepted; "sink" = demo/test sink; "dropped" = honeypot. */
-      delivery: "resend" | "sink" | "dropped";
+      /**
+       * "resend" = provider accepted; "email" = static-site PHP handler
+       * accepted it; "sink" = demo/test sink; "dropped" = honeypot.
+       */
+      delivery: "resend" | "email" | "sink" | "dropped";
       /** Only true when the email provider accepted the message. */
       providerAccepted: boolean;
       intent: InquiryIntent;

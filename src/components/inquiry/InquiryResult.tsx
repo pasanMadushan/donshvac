@@ -49,7 +49,7 @@ export function SentPanel({ state }: { state: Sent }) {
   let body: React.ReactNode;
   if (state.demo) {
     const where =
-      state.delivery === "resend"
+      state.delivery === "resend" || state.delivery === "email"
         ? "was delivered to the demo test inbox, not to Don or his customers"
         : "was delivered to the demo test sink and not sent to anyone";
     notice = (
