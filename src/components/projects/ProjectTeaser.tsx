@@ -138,10 +138,21 @@ export function ProjectTeaser({
   }
 
   return (
-    <article className="group relative grid grid-cols-[auto_1fr] items-center gap-x-4 rounded-md px-3 py-4 transition-colors hover:bg-white sm:grid-cols-[3rem_1fr_auto] sm:gap-x-5">
-      <span aria-hidden="true" className={`flex h-10 w-10 items-center justify-center rounded-full font-display text-lg font-bold text-midnight-950 ${t.bar}`}>
-        {number ?? <span className="h-2 w-2 rounded-full bg-white/80" />}
-      </span>
+    <article className="group relative grid grid-cols-[auto_1fr] items-center gap-x-4 rounded-md px-3 py-3 transition-colors hover:bg-white sm:grid-cols-[auto_1fr_auto] sm:gap-x-5">
+      {project.cover ? (
+        <span className="relative block h-16 w-24 shrink-0 overflow-hidden rounded-md sm:h-20 sm:w-32">
+          <ProjectPhoto
+            image={project.cover}
+            sizes="128px"
+            className="h-full! w-full transition-transform duration-500 group-hover:scale-105"
+          />
+          <span aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-1 ${t.bar}`} />
+        </span>
+      ) : (
+        <span aria-hidden="true" className={`flex h-10 w-10 items-center justify-center rounded-full font-display text-lg font-bold text-midnight-950 ${t.bar}`}>
+          {number ?? <span className="h-2 w-2 rounded-full bg-white/80" />}
+        </span>
+      )}
       <div className="min-w-0">
         <H className="text-xl leading-tight uppercase text-midnight-900 sm:text-2xl">
           <Link href={href} className="after:absolute after:inset-0 after:content-[''] group-hover:text-copper-700">
@@ -150,7 +161,7 @@ export function ProjectTeaser({
         </H>
         {meta.length ? <p className="mt-0.5 text-sm text-ink-muted">{meta.join(" · ")}</p> : null}
       </div>
-      <span aria-hidden="true" className={`col-start-2 hidden transition-transform group-hover:translate-x-1 sm:col-start-3 sm:block ${t.text}`}>
+      <span aria-hidden="true" className={`col-start-3 hidden transition-transform group-hover:translate-x-1 sm:block ${t.text}`}>
         <ArrowRightIcon />
       </span>
     </article>

@@ -25,16 +25,40 @@ const service = (base: string, alt: string) => staticImage("services", base, [48
 /** Keyed by project slug. */
 export const projectCoverFallbacks: Record<string, ProjectImage> = {
   "oshawa-commercial-rooftop-air-conditioner": project(
-    "oshawa-rooftop-ac",
-    "Rooftop air-conditioning unit on a flat commercial roof",
+    "01-oshawa-rooftop-ac",
+    "Large fan-equipped air-conditioning unit on a commercial rooftop at sunset",
   ),
   "brampton-home-heat-pump-installation": project(
-    "brampton-heat-pump",
-    "Outdoor heat pump unit on a stand beside a brick house",
+    "02-brampton-heat-pump",
+    "Heat pump equipment with ductwork and copper lines in an unfinished framed space",
   ),
   "etobicoke-home-tankless-water-heater": project(
-    "etobicoke-tankless",
-    "Wall-mounted tankless water heater with copper piping in a basement",
+    "03-etobicoke-tankless",
+    "Wall-mounted tankless water heater with copper and gas piping underneath",
+  ),
+  "mississauga-home-air-conditioner-repair": project(
+    "04-mississauga-ac-repair",
+    "Outdoor air-conditioner condenser on a concrete pad surrounded by shrubs",
+  ),
+  "richmond-hill-home-nest-thermostat": project(
+    "05-richmond-hill-nest-thermostat",
+    "Round smart thermostat on a wall next to a radiator, showing 18",
+  ),
+  "hamilton-office-gas-line-installation": project(
+    "06-hamilton-office-gas-line",
+    "Gas meter and grey piping running along the outside wall of a building",
+  ),
+  "north-york-home-duct-installation": project(
+    "07-north-york-duct-installation",
+    "Insulated and flexible ductwork running through an attic space",
+  ),
+  "bradford-home-air-conditioner-installation": project(
+    "08-bradford-central-ac-installation",
+    "Central air-conditioner condenser installed against a brick house wall",
+  ),
+  "waterloo-home-wall-mounted-air-conditioner": project(
+    "09-waterloo-wall-mounted-ac",
+    "Outdoor air-conditioning unit mounted beside a house and lattice fence",
   ),
 };
 
