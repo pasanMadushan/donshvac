@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProjectGallery } from "@/components/projects/ProjectGallery";
 import { ProjectIllustration } from "@/components/projects/ProjectIllustration";
+import { ProjectPhoto } from "@/components/projects/ProjectPhoto";
 import { ProjectTeaser } from "@/components/projects/ProjectTeaser";
 import {
   ILLUSTRATION_CAPTION,
@@ -139,6 +140,15 @@ export default async function ProjectPage({ params }: Props) {
               </h2>
               <ProjectGallery images={project.images} />
             </section>
+          ) : project.cover ? (
+            <figure className="m-0 max-w-5xl">
+              <ProjectPhoto
+                image={project.cover}
+                priority
+                sizes="(min-width: 1100px) 1024px, 100vw"
+                className="aspect-[3/2] rounded-lg shadow-panel"
+              />
+            </figure>
           ) : (
             <figure className="max-w-4xl">
               <div className="blueprint-grid border border-midnight-900/15 bg-limestone-50 p-4 sm:p-10">

@@ -71,8 +71,20 @@ export function ProjectTeaser({
     return (
       <article className={`glass group relative flex h-full flex-col overflow-hidden rounded-lg p-3 ring-0 ring-transparent transition-all hover:-translate-y-0.5 hover:ring-2 ${t.ring}`}>
         <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1 ${t.bar}`} />
-        <figure className="m-0">{media(size === "lg" ? "(min-width: 1024px) 700px, 100vw" : "(min-width: 1024px) 480px, 100vw", size === "lg" ? "aspect-[4/3]" : "aspect-[16/9]")}</figure>
-        <div className="flex flex-1 flex-col px-2 pt-3 pb-2">
+        {size === "lg" && project.cover ? (
+          // Lead card: the photo grows to fill the height of the cards beside it.
+          <figure className="relative m-0 lg:min-h-80 lg:flex-1">
+            <ProjectPhoto
+              image={project.cover}
+              priority={priority}
+              sizes="(min-width: 1024px) 700px, 100vw"
+              className="aspect-[4/3] rounded-md transition-transform duration-500 lg:absolute lg:inset-0 lg:aspect-auto lg:h-full"
+            />
+          </figure>
+        ) : (
+          <figure className="m-0">{media(size === "lg" ? "(min-width: 1024px) 700px, 100vw" : "(min-width: 1024px) 480px, 100vw", size === "lg" ? "aspect-[4/3]" : "aspect-[16/9]")}</figure>
+        )}
+        <div className={`flex flex-col px-2 pt-3 pb-2 ${size === "lg" && project.cover ? "" : "flex-1"}`}>
           {metaChips}
           <H className={`mt-3 uppercase leading-[1.02] text-midnight-900 ${size === "lg" ? "text-display-md" : "text-2xl"}`}>
             <Link href={href} className="after:absolute after:inset-0 after:content-[''] hover:text-copper-700">

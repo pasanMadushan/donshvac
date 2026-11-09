@@ -9,6 +9,7 @@ import {
   type ServiceSlug,
 } from "@/config/services";
 import { seedProjects } from "@/content/projects.seed";
+import { projectCoverFallbacks } from "@/content/static-images";
 import { createPublicClient } from "@/lib/supabase/public";
 import { publicMediaUrl } from "@/lib/supabase/env";
 import type { MediaVariant, ProjectImage, PublicProject } from "./types";
@@ -72,7 +73,7 @@ function asPropertyType(v: string | null): PropertyType | null {
 
 export function mapRawProject(raw: RawProject, urlFor?: (path: string) => string): PublicProject {
   const images = raw.images.map((i) => toImage(i, urlFor)).filter((i): i is ProjectImage => i !== null);
-  const cover = images.find((i) => i.isCover) ?? images[0] ?? null;
+  const cover = images.find((i) => i.isCover) ?? images[0] ?? projectCoverFallbacks[raw.slug] ?? null;
   const shareImage = (raw.share_image_media_id && images.find((i) => i.id === raw.share_image_media_id)) || cover;
   return {
     id: raw.id,
@@ -107,7 +108,7 @@ function seedFallback(): PublicProject[] {
       propertyType: s.propertyType,
       featured: s.featured,
       images: [],
-      cover: null,
+      cover: projectCoverFallbacks[s.slug] ?? null,
       seoTitle: null,
       seoDescription: null,
       shareImage: null,

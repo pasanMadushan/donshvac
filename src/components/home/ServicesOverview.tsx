@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { serviceList } from "@/config/services";
 import { ArrowRightIcon } from "@/components/ui/icons";
-import { IllustrationPanel } from "@/components/ui/IllustrationPanel";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { toneClasses, toneFor } from "@/components/ui/tone";
-import { EquipmentDrawing } from "@/components/services/EquipmentDrawing";
+import { ProjectPhoto } from "@/components/projects/ProjectPhoto";
+import { serviceImages } from "@/content/static-images";
 
 const paths = [
   { name: "Repair", text: "When equipment stops working, runs poorly or makes new noises.", href: "/services#repair" },
@@ -38,12 +38,18 @@ export function ServicesOverview() {
             const t = toneClasses[tone];
             return (
               <li key={svc.slug} className="glass group relative flex flex-col overflow-hidden rounded-lg p-3">
-                <IllustrationPanel tone={tone} className="aspect-[4/3]">
-                  <EquipmentDrawing slug={svc.slug} className="h-full w-full" />
-                  <span aria-hidden="true" className="absolute top-3 left-4 font-display text-3xl font-bold text-white/90">
+                <div className="relative overflow-hidden rounded-md">
+                  <ProjectPhoto
+                    image={serviceImages[svc.slug]}
+                    sizes="(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw"
+                    className="aspect-[4/3] transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-midnight-950/70 via-transparent to-transparent" />
+                  <span aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-1 ${t.bar}`} />
+                  <span aria-hidden="true" className="absolute bottom-3 left-4 font-display text-3xl font-bold text-white">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                </IllustrationPanel>
+                </div>
                 <div className="flex flex-1 flex-col px-2 pt-4 pb-2">
                   <h3 className="text-2xl uppercase text-midnight-900">{svc.name}</h3>
                   <p className="mt-2 text-sm text-ink">{svc.summary}</p>
